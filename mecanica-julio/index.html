@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mecânica Julio · Agenda e Notas de Serviço</title>
+  <meta name="description" content="Agenda de serviços e emissão de notas da Mecânica Julio.">
+  <meta name="theme-color" content="#141618">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23141618'/%3E%3Cpath d='M19 8v11.5a4.5 4.5 0 0 1-9 0' stroke='%23F5B700' stroke-width='3.4' fill='none' stroke-linecap='square'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#/painel">
+        <span class="brand-mark" aria-hidden="true">J</span>
+        <span class="brand-text">
+          <strong>Mecânica Julio</strong>
+          <small>Oficina automotiva</small>
+        </span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#/painel" data-route="painel"><i data-icon="dashboard"></i>Painel</a>
+        <a href="#/agenda" data-route="agenda"><i data-icon="calendar"></i>Agenda</a>
+        <a href="#/notas" data-route="notas"><i data-icon="file"></i>Notas de serviço</a>
+        <a href="#/clientes" data-route="clientes"><i data-icon="users"></i>Clientes</a>
+        <a href="#/catalogo" data-route="catalogo"><i data-icon="wrench"></i>Peças e serviços</a>
+        <a href="#/config" data-route="config"><i data-icon="sliders"></i>Configurações</a>
+      </nav>
+
+      <div class="sidebar-actions">
+        <button class="btn btn-primary btn-block" data-action="novo-agendamento"><i data-icon="plus"></i>Agendar serviço</button>
+        <a class="btn btn-ghost-dark btn-block" href="#/notas/nova"><i data-icon="plus"></i>Nova nota</a>
+      </div>
+
+      <div class="sidebar-foot" id="sidebar-foot"></div>
+    </aside>
+
+    <div class="scrim" id="scrim"></div>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="icon-btn" id="menu-btn" aria-label="Abrir menu"><i data-icon="menu"></i></button>
+        <span class="topbar-title" id="topbar-title">Mecânica Julio</span>
+        <button class="icon-btn" data-action="novo-agendamento" aria-label="Novo agendamento"><i data-icon="plus"></i></button>
+      </header>
+      <main id="view" class="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <div id="print-root"></div>
+
+  <script src="js/util.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/view-painel.js"></script>
+  <script src="js/view-agenda.js"></script>
+  <script src="js/view-notas.js"></script>
+  <script src="js/view-clientes.js"></script>
+  <script src="js/view-catalogo.js"></script>
+  <script src="js/view-config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
