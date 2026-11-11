@@ -150,9 +150,39 @@
     }
   });
 
+  /* ---- app Android (APK) ---- */
+  App.APK_URL = 'https://github.com/renanoasz/Controle-de-Gastos-novo/releases/download/apk/mecanica-julio.apk';
+  App.ehAppAndroid = !!window.AndroidApp;
+  App.ehCelularAndroid = /Android/i.test(navigator.userAgent);
+  if (App.ehAppAndroid) {
+    document.documentElement.classList.add('app-android');
+    // WhatsApp, telefone e links de fora abrem nos apps do celular
+    window.open = (url) => {
+      if (url) window.AndroidApp.abrirExterno(String(url));
+      return null;
+    };
+    document.addEventListener(
+      'click',
+      (e) => {
+        const a = e.target.closest('a[href]');
+        if (!a || (a.getAttribute('href') || '').startsWith('#')) return;
+        const u = new URL(a.href, location.href);
+        if (u.origin !== location.origin) {
+          e.preventDefault();
+          window.AndroidApp.abrirExterno(u.href);
+        }
+      },
+      true
+    );
+  }
+  document.querySelectorAll('[data-apk]').forEach((a) => {
+    a.href = App.APK_URL;
+    a.hidden = App.ehAppAndroid || !App.ehCelularAndroid;
+  });
+
   /* ---- app instalável (PWA) ---- */
   let pedidoInstalacao = null;
-  App.instalado = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  App.instalado = () => App.ehAppAndroid || window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   App.podeInstalar = () => !!pedidoInstalacao;
   App.instalar = async () => {
     if (!pedidoInstalacao) return false;
@@ -182,7 +212,7 @@
       App.instalar();
     }
   });
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !App.ehAppAndroid) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Service worker', err)));
   }
   // pede ao navegador para não apagar os dados salvos quando faltar espaço

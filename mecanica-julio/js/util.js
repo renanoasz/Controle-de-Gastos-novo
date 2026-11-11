@@ -40,6 +40,7 @@
     alert: '<path d="M10.3 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/>',
     receipt: '<path d="M4 2.5v19l2.5-1.5L9 21.5l3-1.5 3 1.5 2.5-1.5 2.5 1.5v-19l-2.5 1.5L15 2.5 12 4 9 2.5 6.5 4z"/><path d="M8 9h8M8 13h8"/>',
     whatsapp: '<path d="M3.5 20.5l1.3-4.2A8.6 8.6 0 1 1 8 19.4z"/><path d="M9.2 8.3c.2-.4.5-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.2 0 .4-.1.6l-.5.6c-.1.1-.1.3 0 .5a6 6 0 0 0 2.7 2.6c.2.1.4.1.5-.1l.6-.7c.1-.2.4-.2.6-.1l1.6.8c.2.1.3.3.3.5v.4c0 .4-.2.8-.6 1-.6.3-1.4.5-2.3.2a9.3 9.3 0 0 1-5.3-5c-.4-1-.3-1.9 0-2.4z"/>',
+    android: '<path d="M5 16V10a7 7 0 0 1 14 0v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M5 12h14M8 4.5 6.5 2.5M16 4.5l1.5-2M9 8h.01M15 8h.01M9 17v3.5M15 17v3.5"/>',
     dots: '<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>'
   };
 
@@ -209,6 +210,11 @@
       };
     },
     downloadFile(name, content, type = 'application/json') {
+      // dentro do app Android, o arquivo vai para a tela de "salvar/enviar" do celular
+      if (window.AndroidApp && window.AndroidApp.salvarArquivo) {
+        window.AndroidApp.salvarArquivo(name, content, type);
+        return;
+      }
       const blob = new Blob([content], { type });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);

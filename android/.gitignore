@@ -1,0 +1,9 @@
+.gradle/
+build/
+app/build/
+local.properties
+# chave de assinatura: só nos segredos do GitHub
+*.keystore
+*.jks
+# o site é copiado para cá na hora de gerar o APK
+app/src/main/assets/www/

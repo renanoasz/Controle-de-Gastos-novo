@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mecânica Julio</string>
+    <color name="grafite">#141618</color>
+
+    <style name="Tema" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/grafite</item>
+        <item name="android:statusBarColor">@color/grafite</item>
+        <item name="android:navigationBarColor">@color/grafite</item>
+    </style>
+</resources>
