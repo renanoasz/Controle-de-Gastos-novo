@@ -77,6 +77,26 @@
 
       <section class="card settings-block">
         <div class="settings-intro">
+          <h2>Instalar como app</h2>
+          <p>Coloca a Mecânica Julio na tela inicial, abrindo em tela cheia e funcionando sem internet.</p>
+        </div>
+        <div class="settings-fields">
+          ${
+            App.instalado()
+              ? `<p class="install-ok">${U.icon('check')}Você já está usando o app instalado.</p>`
+              : `${App.podeInstalar() ? `<div class="btn-row"><button class="btn btn-primary" data-action="instalar">${U.icon('download')}<span>Instalar app</span></button></div>` : ''}
+                <ul class="install-steps">
+                  <li><strong>Android (Chrome, Brave, Edge)</strong> Menu <span class="kbd">⋮</span> do navegador → <em>Instalar app</em> ou <em>Adicionar à tela inicial</em>.</li>
+                  <li><strong>iPhone (Safari)</strong> Botão Compartilhar <span class="kbd">⬆</span> → <em>Adicionar à Tela de Início</em>.</li>
+                  <li><strong>Computador (Chrome, Edge)</strong> Ícone de instalar no fim da barra de endereço.</li>
+                </ul>`
+          }
+          <p class="muted small">Os dados do app instalado ficam no mesmo aparelho e navegador. Para usar em outro aparelho, use o backup abaixo.</p>
+        </div>
+      </section>
+
+      <section class="card settings-block">
+        <div class="settings-intro">
           <h2>Backup dos dados</h2>
           <p>Os dados ficam salvos neste navegador. Faça um backup de vez em quando e guarde o arquivo no computador ou no celular.</p>
         </div>

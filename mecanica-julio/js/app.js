@@ -150,6 +150,44 @@
     }
   });
 
+  /* ---- app instalável (PWA) ---- */
+  let pedidoInstalacao = null;
+  App.instalado = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  App.podeInstalar = () => !!pedidoInstalacao;
+  App.instalar = async () => {
+    if (!pedidoInstalacao) return false;
+    pedidoInstalacao.prompt();
+    const { outcome } = await pedidoInstalacao.userChoice;
+    pedidoInstalacao = null;
+    mostrarBotaoInstalar();
+    if (outcome === 'accepted') UI.toast('App instalado na tela inicial');
+    return outcome === 'accepted';
+  };
+  function mostrarBotaoInstalar() {
+    document.querySelectorAll('[data-action="instalar"]').forEach((b) => (b.hidden = !pedidoInstalacao || App.instalado()));
+  }
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    pedidoInstalacao = e;
+    mostrarBotaoInstalar();
+    if ((App.parse().parts[0] || '') === 'config') App.refresh();
+  });
+  window.addEventListener('appinstalled', () => {
+    pedidoInstalacao = null;
+    mostrarBotaoInstalar();
+  });
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-action="instalar"]')) {
+      e.preventDefault();
+      App.instalar();
+    }
+  });
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Service worker', err)));
+  }
+  // pede ao navegador para não apagar os dados salvos quando faltar espaço
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+
   /* ---- start ---- */
   Store.load();
   U.hydrateIcons();
