@@ -39,17 +39,21 @@ jobs:
           cp -r mecanica-julio/. android/app/src/main/assets/www/
 
       - name: Preparar a chave de assinatura (segredos do repositório)
+        id: chave
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
         run: |
           if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ]; then
-            echo "::error::Faltam os segredos ANDROID_KEYSTORE_BASE64 e ANDROID_KEYSTORE_PASSWORD (Settings > Secrets and variables > Actions)."
-            exit 1
+            echo "::warning::APK não gerado: faltam os segredos ANDROID_KEYSTORE_BASE64 e ANDROID_KEYSTORE_PASSWORD (Settings > Secrets and variables > Actions)."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/assinatura.keystore"
+          echo "ok=true" >> "$GITHUB_OUTPUT"
 
       - name: Gerar APK
+        if: steps.chave.outputs.ok == 'true'
         working-directory: android
         env:
           VERSION_CODE: ${{ github.run_number }}
@@ -58,6 +62,7 @@ jobs:
         run: gradle assembleRelease --no-daemon --stacktrace
 
       - name: Publicar no link fixo
+        if: steps.chave.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
