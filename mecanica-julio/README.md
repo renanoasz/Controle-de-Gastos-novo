@@ -7,6 +7,9 @@ Sistema web da oficina: agenda de serviços, emissão de notas/orçamentos, cada
 - **Abrir no computador:** dê dois cliques em `index.html` (funciona sem internet; só as fontes precisam de conexão).
 - **Publicar online (GitHub Pages):** em *Settings → Pages*, escolha o branch e a pasta raiz. O `index.html` da raiz redireciona para `mecanica-julio/`.
 - Na primeira vez, o Painel oferece **Carregar exemplos** para conhecer o sistema.
+- **Instalar como app:** abra o site publicado no celular e use *Instalar app* / *Adicionar à tela inicial* no menu do navegador (no iPhone: Compartilhar → *Adicionar à Tela de Início*). O app abre em tela cheia e funciona sem internet. As instruções também estão em Configurações.
+
+Ao mudar arquivos do app, aumente `VERSAO` em `sw.js` para os aparelhos baixarem a versão nova de imediato (sem isso, a atualização aparece na abertura seguinte).
 
 Os dados ficam salvos no navegador (localStorage). Use **Configurações → Baixar backup** com frequência e **Restaurar backup** para passar os dados para outro computador ou celular.
 
@@ -31,6 +34,7 @@ Atalhos: `N` novo agendamento · `/` buscar.
 ```
 mecanica-julio/
   index.html
+  manifest.webmanifest  sw.js  icons/
   css/style.css
   js/util.js  store.js  ui.js  app.js
   js/view-*.js   (painel, agenda, notas, clientes, catálogo, configurações)

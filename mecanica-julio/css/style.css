@@ -1217,8 +1217,14 @@ button {
   gap: 6px;
   flex-wrap: wrap;
 }
-.chip input {
+.chip {
+  position: relative;
+}
+.field .chip input {
   position: absolute;
+  inset: 0;
+  width: 1px;
+  height: 1px;
   opacity: 0;
   pointer-events: none;
 }
@@ -2035,6 +2041,53 @@ button {
   border-color: #f0cfcb;
 }
 
+.install-steps {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.install-steps li {
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.install-steps strong {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: #fff;
+  font-size: 12px;
+}
+.install-ok {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green);
+  font-weight: 600;
+  margin: 4px 0 10px;
+}
+.sidebar {
+  padding-bottom: max(18px, env(safe-area-inset-bottom));
+}
+#toast-root {
+  bottom: max(20px, env(safe-area-inset-bottom));
+}
+
 /* ===================== Vazio ===================== */
 .empty {
   text-align: center;
@@ -2087,6 +2140,7 @@ button {
 .modal {
   width: 100%;
   max-width: 560px;
+  min-height: 0;
   background: var(--surface);
   border-radius: 8px;
   box-shadow: var(--shadow-lg);
@@ -2251,7 +2305,8 @@ button {
     position: sticky;
     top: 0;
     z-index: 30;
-    height: 54px;
+    height: calc(54px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top) !important;
     padding: 0 8px;
     background: var(--graphite);
     color: #fff;
@@ -2408,10 +2463,33 @@ button {
   .modal-wrap {
     padding: 0;
     align-items: flex-end;
+    height: 100vh;
+    height: 100dvh;
+    bottom: auto;
   }
   .modal {
-    max-height: 94vh;
+    max-height: calc(100vh - 56px);
+    max-height: calc(100dvh - 16px - env(safe-area-inset-top));
     border-radius: 12px 12px 0 0;
+  }
+  .modal-head {
+    position: relative;
+    padding-top: 14px;
+    padding-bottom: 12px;
+  }
+  .modal-head::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 5px;
+    width: 36px;
+    height: 4px;
+    margin-left: -18px;
+    border-radius: 2px;
+    background: var(--line);
+  }
+  .modal-foot {
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
   .modal-foot {
     border-radius: 0;

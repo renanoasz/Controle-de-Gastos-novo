@@ -90,7 +90,7 @@
     const q = new URLSearchParams({ v: state.modo, d: state.cursor });
     const h = `#/agenda?${q}`;
     if (location.hash === h) App.refresh();
-    else location.hash = h;
+    else UI.nav(h);
   }
 
   function pularFechado(iso, dir) {

@@ -603,7 +603,7 @@
           Store.save();
           setDirty(false);
           UI.toast('Nota excluída');
-          location.hash = '#/notas';
+          UI.nav('#/notas');
         }
       });
 

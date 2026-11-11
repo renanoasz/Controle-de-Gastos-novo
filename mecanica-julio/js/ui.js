@@ -1,6 +1,32 @@
 /* Componentes de interface: modal, toast, confirmação, badges, formulário de agendamento */
 (function () {
+  /* Janelas abertas entram no histórico: o botão/gesto "voltar" do celular fecha a janela
+     em vez de sair da página. */
+  const pilha = [];
+  let ignorarPop = 0;
+  let voltaPendente = null;
+  let resolverVolta = null;
+  window.addEventListener('popstate', () => {
+    if (ignorarPop > 0) {
+      ignorarPop--;
+      if (!ignorarPop && resolverVolta) {
+        resolverVolta();
+        voltaPendente = resolverVolta = null;
+      }
+      return;
+    }
+    const topo = pilha[pilha.length - 1];
+    if (topo) topo(true);
+  });
+
   const UI = {
+    /* navega depois que o histórico da janela fechada terminar de voltar */
+    nav(hash) {
+      (voltaPendente || Promise.resolve()).then(() => {
+        location.hash = hash;
+      });
+    },
+
     /* ---------- toast ---------- */
     toast(msg, type = 'ok') {
       const root = document.getElementById('toast-root');
@@ -33,7 +59,18 @@
       document.body.classList.add('no-scroll');
       requestAnimationFrame(() => wrap.classList.add('show'));
 
-      const close = () => {
+      history.pushState({ mjModal: true }, '', location.href);
+      let fechada = false;
+      const close = (pelaVolta = false) => {
+        if (fechada) return;
+        fechada = true;
+        const i = pilha.indexOf(close);
+        if (i >= 0) pilha.splice(i, 1);
+        if (pelaVolta !== true) {
+          ignorarPop++;
+          if (!voltaPendente) voltaPendente = new Promise((r) => (resolverVolta = r));
+          history.back();
+        }
         wrap.classList.remove('show');
         document.removeEventListener('keydown', onKey);
         setTimeout(() => {
@@ -49,7 +86,8 @@
       wrap.addEventListener('mousedown', (e) => {
         if (e.target === wrap) close();
       });
-      wrap.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', close));
+      pilha.push(close);
+      wrap.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => close()));
       const first = wrap.querySelector('input:not([type=hidden]), select, textarea');
       if (first && window.matchMedia('(min-width: 760px)').matches) setTimeout(() => first.focus(), 60);
       return { el: wrap, close };
@@ -313,10 +351,10 @@
           if (!s) return;
           m.close();
           if (s.notaId && Store.get('notas', s.notaId)) {
-            location.hash = `#/notas/${s.notaId}`;
+            UI.nav(`#/notas/${s.notaId}`);
             return;
           }
-          location.hash = `#/notas/nova?ag=${s.id}`;
+          UI.nav(`#/notas/nova?ag=${s.id}`);
         });
 
       return m;

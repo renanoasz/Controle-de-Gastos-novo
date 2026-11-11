@@ -2,10 +2,16 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mecânica Julio · Agenda e Notas de Serviço</title>
   <meta name="description" content="Agenda de serviços e emissão de notas da Mecânica Julio.">
   <meta name="theme-color" content="#141618">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Mecânica Julio">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23141618'/%3E%3Cpath d='M19 8v11.5a4.5 4.5 0 0 1-9 0' stroke='%23F5B700' stroke-width='3.4' fill='none' stroke-linecap='square'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +41,7 @@
       <div class="sidebar-actions">
         <button class="btn btn-primary btn-block" data-action="novo-agendamento"><i data-icon="plus"></i>Agendar serviço</button>
         <a class="btn btn-ghost-dark btn-block" href="#/notas/nova"><i data-icon="plus"></i>Nova nota</a>
+        <button class="btn btn-ghost-dark btn-block" data-action="instalar" hidden><i data-icon="download"></i>Instalar app</button>
       </div>
 
       <div class="sidebar-foot" id="sidebar-foot"></div>
