@@ -103,12 +103,7 @@
       const ag = {};
       if (location.hash.startsWith('#/agenda') && ViewAgenda.state.cursor >= U.today()) ag.data = ViewAgenda.state.cursor;
       UI.agendamentoForm(ag, {
-        onSaved: (s) => {
-          if (s && location.hash.startsWith('#/agenda')) {
-            ViewAgenda.state.cursor = s.data;
-          }
-          App.refresh();
-        }
+        onSaved: (s) => ViewAgenda.aposSalvar(s)
       });
     }
   });
@@ -160,6 +155,13 @@
   U.hydrateIcons();
   App.updateBrand();
   if (!location.hash) history.replaceState(null, '', '#/painel');
+  // ao abrir o site, a agenda sempre começa em hoje (ignora o dia guardado no endereço)
+  if (location.hash.startsWith('#/agenda')) {
+    const { params } = App.parse();
+    params.delete('d');
+    const qs = params.toString();
+    history.replaceState(null, '', '#/agenda' + (qs ? '?' + qs : ''));
+  }
   App.refresh();
 
   // atualiza o painel/agenda a cada minuto (linha do "agora")

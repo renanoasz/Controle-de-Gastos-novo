@@ -77,6 +77,15 @@
     });
   }
 
+  /* mostra o dia de um agendamento recém-salvo */
+  function aposSalvar(ag) {
+    if (ag && ag.data && location.hash.startsWith('#/agenda')) {
+      state.cursor = ag.data;
+      if (state.modo === 'lista') App.refresh();
+      else go();
+    } else App.refresh();
+  }
+
   function go() {
     const q = new URLSearchParams({ v: state.modo, d: state.cursor });
     const h = `#/agenda?${q}`;
@@ -212,11 +221,11 @@
         const step = Number(cfg.intervalo) || 30;
         let min = ini + Math.floor(y / PPM / step) * step;
         min = Math.max(ini, Math.min(min, fim - step));
-        UI.agendamentoForm({ data: col.dataset.dia, hora: U.minToTime(min) }, { onSaved: () => App.refresh() });
+        UI.agendamentoForm({ data: col.dataset.dia, hora: U.minToTime(min) }, { onSaved: aposSalvar });
       })
     );
     body.querySelectorAll('.ev').forEach((b) =>
-      b.addEventListener('click', () => UI.agendamentoForm(Store.get('agendamentos', b.dataset.ag), { onSaved: () => App.refresh() }))
+      b.addEventListener('click', () => UI.agendamentoForm(Store.get('agendamentos', b.dataset.ag), { onSaved: aposSalvar }))
     );
     body.querySelectorAll('[data-dia]:not(.cal-col)').forEach((b) =>
       b.addEventListener('click', () => {
@@ -332,7 +341,7 @@
         )
         .join('');
       box.querySelectorAll('[data-ag]').forEach((li) =>
-        li.addEventListener('click', () => UI.agendamentoForm(Store.get('agendamentos', li.dataset.ag), { onSaved: () => App.refresh() }))
+        li.addEventListener('click', () => UI.agendamentoForm(Store.get('agendamentos', li.dataset.ag), { onSaved: aposSalvar }))
       );
     };
     draw();
@@ -353,5 +362,5 @@
     });
   }
 
-  window.ViewAgenda = { render, title: 'Agenda', state };
+  window.ViewAgenda = { render, title: 'Agenda', state, aposSalvar };
 })();

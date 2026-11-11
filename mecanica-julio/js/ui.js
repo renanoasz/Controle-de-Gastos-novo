@@ -274,7 +274,7 @@
         e.preventDefault();
         const s = save();
         if (!s) return;
-        UI.toast(isNew ? 'Serviço agendado' : 'Agendamento atualizado');
+        UI.toast(`${isNew ? 'Agendado' : 'Atualizado'}: ${U.relDay(s.data).toLowerCase()} às ${s.hora}`);
         m.close();
         onSaved && onSaved(s);
       });
