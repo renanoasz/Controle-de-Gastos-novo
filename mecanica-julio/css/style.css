@@ -2140,6 +2140,7 @@ button {
 .modal {
   width: 100%;
   max-width: 560px;
+  min-height: 0;
   background: var(--surface);
   border-radius: 8px;
   box-shadow: var(--shadow-lg);
@@ -2462,10 +2463,33 @@ button {
   .modal-wrap {
     padding: 0;
     align-items: flex-end;
+    height: 100vh;
+    height: 100dvh;
+    bottom: auto;
   }
   .modal {
-    max-height: 94vh;
+    max-height: calc(100vh - 56px);
+    max-height: calc(100dvh - 16px - env(safe-area-inset-top));
     border-radius: 12px 12px 0 0;
+  }
+  .modal-head {
+    position: relative;
+    padding-top: 14px;
+    padding-bottom: 12px;
+  }
+  .modal-head::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 5px;
+    width: 36px;
+    height: 4px;
+    margin-left: -18px;
+    border-radius: 2px;
+    background: var(--line);
+  }
+  .modal-foot {
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
   .modal-foot {
     border-radius: 0;

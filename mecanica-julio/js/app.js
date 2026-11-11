@@ -138,7 +138,7 @@
       const ok = await UI.confirm('Há alterações não salvas nesta nota. Sair mesmo assim?', { title: 'Sair sem salvar', ok: 'Sair sem salvar', danger: true });
       if (!ok) return;
       guard = null;
-      location.hash = target;
+      UI.nav(target);
       return;
     }
     App.refresh();

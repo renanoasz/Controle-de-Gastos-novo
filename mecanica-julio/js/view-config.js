@@ -180,14 +180,14 @@
       if (temDados && !(await UI.confirm('Isso substitui clientes, agendamentos, notas e catálogo atuais por dados de exemplo.', { ok: 'Substituir', danger: true }))) return;
       Store.exemplos();
       UI.toast('Dados de exemplo carregados');
-      location.hash = '#/painel';
+      UI.nav('#/painel');
     });
     el.querySelector('#dz-reset').addEventListener('click', async () => {
       if (await UI.confirm('Apagar TODOS os clientes, agendamentos, notas e configurações deste navegador? Baixe um backup antes, se precisar.', { title: 'Apagar tudo', ok: 'Apagar tudo', danger: true })) {
         Store.resetar();
         App.updateBrand();
         UI.toast('Dados apagados');
-        location.hash = '#/painel';
+        UI.nav('#/painel');
       }
     });
   }

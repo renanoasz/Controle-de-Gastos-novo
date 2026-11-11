@@ -156,7 +156,7 @@
       UI.toast('Cliente salvo');
       m.close();
       if (onSaved) onSaved(saved);
-      else location.hash = `#/clientes/${saved.id}`;
+      else UI.nav(`#/clientes/${saved.id}`);
     };
     m.el.querySelector('[data-save]').addEventListener('click', save);
     f.addEventListener('submit', (e) => {
@@ -372,7 +372,7 @@
       if (await UI.confirm(msg, { title: 'Excluir cliente', ok: 'Excluir', danger: true })) {
         Store.remove('clientes', c.id);
         UI.toast('Cliente excluído');
-        location.hash = '#/clientes';
+        UI.nav('#/clientes');
       }
     });
   }

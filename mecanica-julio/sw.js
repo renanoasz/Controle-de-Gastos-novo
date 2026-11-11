@@ -1,5 +1,5 @@
 /* Service worker: deixa o app abrir sem internet e atualiza em segundo plano */
-const VERSAO = 'mj-v1';
+const VERSAO = 'mj-v2';
 const ARQUIVOS = [
   './',
   './index.html',
