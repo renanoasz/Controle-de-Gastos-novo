@@ -9,6 +9,8 @@ Sistema web da oficina: agenda de serviços, emissão de notas/orçamentos, cada
 - Na primeira vez, o Painel oferece **Carregar exemplos** para conhecer o sistema.
 - **Instalar como app:** abra o site publicado no celular e use *Instalar app* / *Adicionar à tela inicial* no menu do navegador (no iPhone: Compartilhar → *Adicionar à Tela de Início*). O app abre em tela cheia e funciona sem internet. As instruções também estão em Configurações.
 
+- **App Android (.apk):** botão *Baixar app Android* no menu (no celular Android) e em Configurações. O APK é gerado pelo GitHub Actions (`.github/workflows/android-apk.yml`) a cada atualização do `main` e publicado em `releases/download/apk/mecanica-julio.apk`. O projeto Android fica em `android/` (WebView com o site empacotado, funcionando offline; impressão, backup, WhatsApp e telefone passam para o Android). A chave de assinatura fica só nos segredos do repositório (`ANDROID_KEYSTORE_BASE64` e `ANDROID_KEYSTORE_PASSWORD`), nunca no código. Os dados do app Android ficam separados dos do navegador: use backup/restauração para levá-los.
+
 Ao mudar arquivos do app, aumente `VERSAO` em `sw.js` para os aparelhos baixarem a versão nova de imediato (sem isso, a atualização aparece na abertura seguinte).
 
 Os dados ficam salvos no navegador (localStorage). Use **Configurações → Baixar backup** com frequência e **Restaurar backup** para passar os dados para outro computador ou celular.

@@ -740,6 +740,21 @@
       document.title = prevTitle;
       window.removeEventListener('afterprint', done);
     };
+    // app Android: a impressão/PDF é feita pelo Android; o layout de impressão fica ativo
+    // até o usuário voltar da tela de impressão
+    if (window.AndroidApp && window.AndroidApp.imprimir) {
+      let saiu = false;
+      const aoVoltar = () => {
+        if (document.hidden) saiu = true;
+        else if (saiu) {
+          document.removeEventListener('visibilitychange', aoVoltar);
+          done();
+        }
+      };
+      document.addEventListener('visibilitychange', aoVoltar);
+      setTimeout(() => window.AndroidApp.imprimir(document.title), 50);
+      return;
+    }
     window.addEventListener('afterprint', done);
     setTimeout(() => {
       window.print();

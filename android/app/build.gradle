@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.application'
+}
+
+// número da versão vem do GitHub Actions (cada build é uma versão nova, instalável por cima)
+def numeroVersao = (System.getenv('VERSION_CODE') ?: '1') as int
+// a chave de assinatura NÃO fica no repositório: vem dos segredos do GitHub
+// (ANDROID_KEYSTORE_BASE64 e ANDROID_KEYSTORE_PASSWORD), decodificada pelo workflow
+def arquivoChave = file(System.getenv('KEYSTORE_FILE') ?: '../assinatura.keystore')
+def senhaChave = System.getenv('KEYSTORE_PASSWORD')
+
+android {
+    namespace 'br.com.mecanicajulio'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'br.com.mecanicajulio'
+        minSdk 24
+        targetSdk 34
+        versionCode numeroVersao
+        versionName "1.0.${numeroVersao}"
+    }
+
+    signingConfigs {
+        release {
+            storeFile arquivoChave
+            storePassword senhaChave
+            keyAlias 'mecanicajulio'
+            keyPassword senhaChave
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.11.0'
+    implementation 'androidx.core:core:1.13.1'
+}

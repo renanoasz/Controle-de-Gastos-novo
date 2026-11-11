@@ -82,8 +82,27 @@
         </div>
         <div class="settings-fields">
           ${
+            App.ehAppAndroid
+              ? `<p class="install-ok">${U.icon('check')}Você está usando o app Android.</p>
+                 <p class="muted small">Para atualizar, baixe o APK de novo e instale por cima: os dados continuam.</p>
+                 <div class="btn-row"><button class="btn" data-externo="${U.esc(App.APK_URL)}">${U.icon('download')}<span>Baixar versão mais nova</span></button></div>`
+              : ''
+          }
+          ${
+            App.ehAppAndroid
+              ? ''
+              : `<div class="apk-box">
+                  <div>
+                    <strong>App para Android (.apk)</strong>
+                    <span>Instala como um app comum, com ícone próprio e funcionando sem internet.</span>
+                  </div>
+                  <a class="btn btn-primary" href="${U.esc(App.APK_URL)}" download>${U.icon('android')}<span>Baixar .apk</span></a>
+                </div>
+                <p class="muted small apk-help">Ao abrir o arquivo no celular, o Android pode pedir para permitir a instalação "deste navegador" (fontes desconhecidas). Libere só para essa instalação. O app é gerado automaticamente a cada atualização do site.</p>`
+          }
+          ${
             App.instalado()
-              ? `<p class="install-ok">${U.icon('check')}Você já está usando o app instalado.</p>`
+              ? App.ehAppAndroid ? '' : `<p class="install-ok">${U.icon('check')}Você já está usando o app instalado.</p>`
               : `${App.podeInstalar() ? `<div class="btn-row"><button class="btn btn-primary" data-action="instalar">${U.icon('download')}<span>Instalar app</span></button></div>` : ''}
                 <ul class="install-steps">
                   <li><strong>Android (Chrome, Brave, Edge)</strong> Menu <span class="kbd">⋮</span> do navegador → <em>Instalar app</em> ou <em>Adicionar à tela inicial</em>.</li>
@@ -91,7 +110,7 @@
                   <li><strong>Computador (Chrome, Edge)</strong> Ícone de instalar no fim da barra de endereço.</li>
                 </ul>`
           }
-          <p class="muted small">Os dados do app instalado ficam no mesmo aparelho e navegador. Para usar em outro aparelho, use o backup abaixo.</p>
+          <p class="muted small">${App.ehAppAndroid ? 'Os dados do app ficam guardados neste celular, separados dos do navegador. Para trazer dados do navegador, faça um backup lá e restaure aqui.' : 'Os dados do app instalado ficam no mesmo aparelho e navegador. O app Android (.apk) guarda os dados separados: para levar os dados, faça um backup aqui e restaure no app.'}</p>
         </div>
       </section>
 
@@ -155,6 +174,7 @@
       UI.toast('Configurações salvas');
     });
 
+    el.querySelectorAll('[data-externo]').forEach((b) => b.addEventListener('click', () => window.open(b.dataset.externo, '_blank', 'noopener')));
     el.querySelector('#bk-export').addEventListener('click', () => {
       U.downloadFile(`backup-mecanica-julio-${U.today()}.json`, Store.exportar());
       UI.toast('Backup baixado');
