@@ -2,6 +2,15 @@
 (function () {
   let busca = '';
 
+  function waMsg(c) {
+    const nome = String(c.nome || '').split(' ')[0];
+    return `Olá, ${nome}! Aqui é da ${Store.config.nome}.`;
+  }
+  function waBtn(c, cls = 'btn btn-whatsapp', label = 'WhatsApp') {
+    if (!U.digits(c.telefone)) return `<button type="button" class="${cls} is-off" data-wa-sem-tel title="Cliente sem telefone cadastrado">${U.icon('whatsapp')}<span>${label}</span></button>`;
+    return `<a class="${cls}" href="${U.waLink(c.telefone, waMsg(c))}" target="_blank" rel="noopener" title="Abrir conversa no WhatsApp">${U.icon('whatsapp')}<span>${label}</span></a>`;
+  }
+
   function renderLista(el) {
     el.innerHTML = `
       <div class="page-head">
@@ -43,7 +52,7 @@
       box.innerHTML = `
         <div class="table-wrap">
           <table class="table">
-            <thead><tr><th>Cliente</th><th class="hide-sm">Telefone</th><th>Veículos</th><th class="hide-md num">Serviços</th><th class="hide-md">Última visita</th><th class="num hide-sm">Total pago</th></tr></thead>
+            <thead><tr><th>Cliente</th><th class="hide-sm">Telefone</th><th>Veículos</th><th class="hide-md num">Serviços</th><th class="hide-md">Última visita</th><th class="num hide-sm">Total pago</th><th class="actions">WhatsApp</th></tr></thead>
             <tbody>${list
               .map((c) => {
                 const h = Store.historicoCliente(c.id);
@@ -55,12 +64,26 @@
                 <td class="hide-md num mono">${h.notas.length}</td>
                 <td class="hide-md">${h.ultima ? U.fmtDate(h.ultima) : '<span class="muted">—</span>'}</td>
                 <td class="num mono hide-sm">${U.money(h.gasto)}</td>
+                <td class="actions">${waBtn(c, 'icon-btn icon-wa', '')}</td>
               </tr>`;
               })
               .join('')}</tbody>
           </table>
         </div>`;
-      box.querySelectorAll('.row-link').forEach((tr) => tr.addEventListener('click', () => (location.hash = tr.dataset.href)));
+      box.querySelectorAll('.row-link').forEach((tr) =>
+        tr.addEventListener('click', (e) => {
+          if (e.target.closest('.icon-wa')) return;
+          location.hash = tr.dataset.href;
+        })
+      );
+      box.querySelectorAll('[data-wa-sem-tel]').forEach((b) =>
+        b.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const c = Store.get('clientes', b.closest('tr').dataset.href.split('/').pop());
+          UI.toast('Cadastre o telefone deste cliente para usar o WhatsApp', 'error');
+          clienteForm(c, () => App.refresh());
+        })
+      );
     };
     draw();
     el.querySelector('#cli-busca').addEventListener(
@@ -211,7 +234,7 @@
           <h1 class="person-title"><span class="avatar avatar-lg">${U.esc(U.initials(c.nome))}</span>${U.esc(c.nome)}</h1>
         </div>
         <div class="page-actions">
-          ${c.telefone ? `<a class="btn" href="${U.waLink(c.telefone)}" target="_blank" rel="noopener">${U.icon('chat')}<span>WhatsApp</span></a>` : ''}
+          ${waBtn(c)}
           <button class="btn" id="cli-edit">${U.icon('edit')}<span>Editar</span></button>
           <button class="btn" id="cli-agendar">${U.icon('calendar')}<span>Agendar</span></button>
           <a class="btn btn-primary" href="#/notas/nova?cliente=${c.id}">${U.icon('plus')}<span>Nova nota</span></a>
@@ -230,6 +253,10 @@
               <div><dt>Cliente desde</dt><dd>${c.criadoEm ? U.fmtDate(c.criadoEm.slice(0, 10)) : '—'}</dd></div>
             </dl>
             ${c.obs ? `<p class="note">${U.esc(c.obs)}</p>` : ''}
+            <div class="contact-actions">
+              ${waBtn(c, 'btn btn-whatsapp btn-block', U.digits(c.telefone) ? 'Conversar no WhatsApp' : 'WhatsApp (sem telefone)')}
+              ${U.digits(c.telefone) ? `<a class="btn btn-icon" href="tel:${U.digits(c.telefone)}" title="Ligar" aria-label="Ligar">${U.icon('phone')}</a>` : ''}
+            </div>
           </section>
 
           <section class="card">
@@ -324,6 +351,12 @@
 
     const refresh = () => App.refresh();
     el.querySelector('#cli-edit').addEventListener('click', () => clienteForm(c, refresh));
+    el.querySelectorAll('[data-wa-sem-tel]').forEach((b) =>
+      b.addEventListener('click', () => {
+        UI.toast('Cadastre o telefone deste cliente para usar o WhatsApp', 'error');
+        clienteForm(c, refresh);
+      })
+    );
     el.querySelector('#cli-agendar').addEventListener('click', () => {
       const v = (c.veiculos || [])[0] || {};
       UI.agendamentoForm({ clienteId: c.id, cliente: { nome: c.nome, telefone: c.telefone }, veiculo: { modelo: v.modelo || '', placa: v.placa || '' } }, { onSaved: refresh });
